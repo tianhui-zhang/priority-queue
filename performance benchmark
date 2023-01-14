@@ -1,0 +1,14 @@
+#performance benchmark
+#Change the size of the priority queue to see how long it takes to to perform insert() and delMin()
+import time
+pq=Minpq()
+for i in range(2,10001):
+    pq.insert(i)
+start1=time.time()
+pq.insert(1)
+end1=time.time()
+print('insert() cost %f second'%(end1-start1))
+start2=time.time()
+pq.delMin()
+end2=time.time()
+print('delMin() cost %f second'%(end2-start2))
