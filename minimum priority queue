@@ -1,0 +1,93 @@
+#Based on the complete binary tree above, design a minimum priority queue.
+class Minpq:
+    def __init__(self):
+        self._data=CBT()
+        
+    def insert(self,key):
+        #Add an node with the given key to the last of the linked list/complete binary tree/minimum priority queue, which may violate the heap order.
+        self._data.addLast_withTail(key)
+        #If the size of the linked list is 1, the heap order will not be violated, so there is no other operations.
+        if self._data._size==1:
+            pass
+        #if the size of the linked list is not 1, the heap order may be violated. We can fix it by up bubbling.
+        else:
+            #Firstly, find the index of the new node to find its parent.
+            index=self._data.index_of(key)
+            #Then find the parent with the method we define in class CBT.
+            parent=self._data.FindParent(index)
+            #Compare the given key(the key of the last node) with the key of its parent. If the child's key is smaller, conduct up bubbling.
+            while key<parent._key:
+                #In line 23, change the key of the node at child position into the key of the parent.
+                #In line 24, change the key of the node at parent position into the key of the child.
+                #lines 22 and 23 swap the locations of parent and child nodes
+                self._data._set(index,parent._key)
+                self._data._set((index-1)//2,key)
+                #Find the new index of the given key to find its new parent
+                index=self._data.index_of(key)
+                #If the new parent exists
+                if (index-1)//2>=0:
+                    #Find the new parent
+                    parent=self._data.FindParent(index)
+                #If the new parent does not exist
+                else:
+                    #End the loop
+                    break
+                
+    def delMin(self):
+        #If the size is 1 or 2,there is no need to conduct down bubbling.
+        if self._data._size<=2:
+            #The fisrt node has minimum key, so remove the first node and do not conduct down bubbling.
+            self._data.removeFirst()
+        #If the size is greater than 2, firstly move the last node to the first position, then conduct down bubbling.
+        else:
+            #Change the root node into the tail node(move the last node to the first position).
+            self._data._set(0,self._data._tail._key)
+            #Remove the original tail node.
+            self._data.removeLast()
+            #Set the variable 'walk' to be the key the the head node, which is actually the key of the original tail node.
+            walk=self._data._head._key
+            #Set the variable 'i' to be the index of 'walk'(index of parent).
+            i=self._data.index_of(walk)
+            while True:
+                #If there is 2 children(2*i+2 is the index of right child and since size starts from 1 but index starts from 0, so self._size-1).
+                if 2*i+2<=self._data._size-1:
+                    #Find the key of the left child.
+                    LeftChild=self._data.FindLeftChild(i)._key
+                    #Find the key of the right child.
+                    RightChild=self._data.FindRightChild(i)._key
+                    #If 'walk'(the key of the parent) is greater than any of the keys of its children, conduct down bubbling.
+                    if walk>LeftChild or RightChild:
+                        #Find the smaller one of the children's keys and then swap the locations of that child node and its parent node.
+                        minchild=min(LeftChild,RightChild)
+                        #Set the variable 'i' to be the index of 'minchild', which is actually also the new index of parent.
+                        i=self._data.index_of(minchild)
+                        #In line 67, change the key of the node at 'minchild' position into the key of the parent.
+                        #In line 68, change the key of the node at parent position into 'minchild'.
+                        #lines 67 nad 68 swap the locations of the parent and its child with a smaller key.
+                        self._data._set(i,walk)
+                        self._data._set((i-1)//2,minchild)
+                    #If 'walk'(the key of the parent) is not greater than any of the keys of its children.
+                    else:
+                        #End the loop.
+                        break
+                #If there is only 1 child(2*i+1 is the index of lest child and since size starts from 1 but index starts from 0, so self._size-1).
+                elif 2*i+1==self._data._size-1:
+                    #Find the key of the left child.
+                    LeftChild=self._data.get_node(2*i+1)._key
+                    #If 'walk'(the key of the parent) is greater than the key of the left child, condcut down bubbling.
+                    if walk>LeftChild:
+                        #Set the variable 'i' to be the index of 'LeftChild', which is actually also the new index of parent.
+                        i=self._data.index_of(LeftChild)
+                        #In line 84, change the key of the node at 'LeftChild' position into the key of the parent.
+                        #In line 85, change the key of the node at parent position into 'LeftChild'.
+                        #lines 84 and 85 swap the locations of the parent and its left child.
+                        self._data._set(i,walk)
+                        self._data._set((i-1)//2,minchild)
+                    #If 'walk'(the key of the parent) is not greater than the key of its left child.
+                    else:
+                        #End the loop.
+                        break
+                #If there is no children.
+                else:
+                    #End the loop.
+                    break
