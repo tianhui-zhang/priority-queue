@@ -1,0 +1,95 @@
+class Node:
+    def __init__(self,key=None,next=None):
+        self._key=key
+        self._next=next
+#Complete binary tree ADT based on a singly linked list
+#Each node has a different key
+class CBT:
+    def __init__(self):
+        self._head=None
+        self._tail=None
+        self._size=0
+        
+    def addLast_withTail(self,key):
+        node=Node(key)
+        if self._size==0:
+            self._head=node
+            self._tail=self._head
+        else:
+            self._tail._next=node
+            self._tail=self._tail._next
+        self._size+=1
+        
+    def removeFirst(self):
+        if self._size==0:
+            raise IndexError('Error')
+        oldhead=self._head
+        self._head=self._head._next
+        self._size-=1
+        if self._head==None:
+            self._tail=None
+        return oldhead
+    
+    def removeLast(self):
+        if self._size==0:
+            raise IndexError('Error')
+        if self._head==self._tail:
+            self._head=None
+            self._head=None
+        else:
+            walk=self._head
+            while walk._next is not self._tail:
+                walk=walk._next
+            walk._next=None
+            self._tail=walk
+        self._size-=1
+        
+    #To get the index of a given key   
+    def index_of(self,key):
+        if self._size==0:
+            raise IndexError('Out of bounds.')
+        s=0
+        walk=self._head
+        while walk is not None:
+            if walk._key==key:
+                return s
+            s+=1
+            walk=walk._next
+        return -1
+    
+    #To get the node with index i
+    def get_node(self,i):
+        if i<0 or i>self._size-1:#size starts from 1 but index starts from 0, so self._size-1
+            raise IndexError('Out of bounds')
+        id=0
+        walk=self._head
+        while id<i:
+            id+=1
+            walk=walk._next
+        return walk
+    
+    #To set the key of the node with index i to k
+    def _set(self,i,k):
+        x=self.get_node(i)
+        x._key=k
+        
+    #Given an index i, find its parent
+    #Since index starts from 0, the index of parent is (i-1)//2
+    def FindParent(self,i):
+        index=(i-1)//2
+        parent=self.get_node(index)
+        return parent
+    
+    #Given an index i, find its left child
+    #Since index starts from 0, the index of left child is 2*i+1
+    def FindLeftChild(self,i):
+        index=2*i+1
+        child=self.get_node(index)
+        return child
+    
+    #Given an index i, find its right child
+    #Since index starts from 0, the index of right child is 2*i+2
+    def FindRightChild(self,i):
+        index=2*i+2
+        child=self.get_node(index)
+        return child
